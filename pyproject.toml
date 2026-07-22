@@ -5,7 +5,7 @@ description = ""
 authors = [
     {name = "Willsmt",email = "willian_marthins@hotmail.com"}
 ]
-requires-python = ">=3.14,<4.0"
+requires-python = ">=3.12,<4.0"
 dependencies = [
     "django (>=6.0.7,<7.0.0)",
     "djangorestframework (>=3.17.1,<4.0.0)",
@@ -38,3 +38,6 @@ select = ["E", "F", "I", "UP"]
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "core.settings"
 python_files = ["test_*.py", "*_test.py", "tests.py"]
+
+[tool.poetry]
+package-mode = false
