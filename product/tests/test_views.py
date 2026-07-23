@@ -11,16 +11,9 @@ User = get_user_model()
 
 @pytest.mark.django_db
 class TestProductAPI:
-    def _authenticated_client(self):
-        user = User.objects.create_user(username="cliente", password="senha123")
-        client = APIClient()
-        client.force_authenticate(user=user)
-        return client
-
-    def test_destroy_soft_deletes_product(self):
+    def test_destroy_soft_deletes_product(self, authenticated_client):
         product = ProductFactory(is_active=True)
-        client = self._authenticated_client()
-        response = client.delete(reverse("product-detail", args=[product.id]))
+        response = authenticated_client.delete(reverse("product-detail", args=[product.id]))
         assert response.status_code == 204
         product.refresh_from_db()
         assert product.is_active is False
@@ -65,10 +58,9 @@ class TestProductAPI:
         assert len(results) == 1
         assert results[0]["id"] == produto_na_categoria.id
 
-    def test_reactivate_reactivates_inactive_product(self):
+    def test_reactivate_reactivates_inactive_product(self, authenticated_client):
         product = ProductFactory(is_active=False)
-        client = self._authenticated_client()
-        response = client.post(reverse("product-reactivate", args=[product.id]))
+        response = authenticated_client.post(reverse("product-reactivate", args=[product.id]))
         assert response.status_code == 200
         product.refresh_from_db()
         assert product.is_active is True
@@ -77,3 +69,21 @@ class TestProductAPI:
         product = ProductFactory(is_active=False)
         response = APIClient().post(reverse("product-reactivate", args=[product.id]))
         assert response.status_code == 403
+
+    def test_create_product_com_preco_negativo_retorna_400(self, authenticated_client):
+        response = authenticated_client.post(
+            reverse("product-list"),
+            {"title": "Produto Teste", "price": "-10.00", "stock": 5},
+            format="json",
+        )
+        assert response.status_code == 400
+        assert "price" in response.json()
+
+    def test_list_products_usa_prefetch_e_nao_gera_n_mais_1(self, django_assert_num_queries):
+        category = CategoryFactory()
+        ProductFactory.create_batch(5, categories=[category])
+
+        with django_assert_num_queries(3):
+            response = APIClient().get(reverse("product-list"))
+
+        assert response.status_code == 200
