@@ -64,3 +64,16 @@ class TestProductAPI:
         results = payload["results"] if isinstance(payload, dict) and "results" in payload else payload
         assert len(results) == 1
         assert results[0]["id"] == produto_na_categoria.id
+
+    def test_reactivate_reactivates_inactive_product(self):
+        product = ProductFactory(is_active=False)
+        client = self._authenticated_client()
+        response = client.post(reverse("product-reactivate", args=[product.id]))
+        assert response.status_code == 200
+        product.refresh_from_db()
+        assert product.is_active is True
+
+    def test_reactivate_requires_authentication(self):
+        product = ProductFactory(is_active=False)
+        response = APIClient().post(reverse("product-reactivate", args=[product.id]))
+        assert response.status_code == 403
