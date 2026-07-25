@@ -34,15 +34,16 @@ class TestOrderAPI:
         assert response.status_code == 400
 
     def test_post_anonimo_e_bloqueado(self):
-        # o 403 que apareceu no primeiro run nao era bug -- e este teste,
-        # so que faltava escrever ele explicitamente.
+        # Com TokenAuthentication isolada na OrderViewSet (unica da lista),
+        # authenticate_header() retorna valor -> DRF sobe 401 (nao mais 403,
+        # que era o comportamento de quando SessionAuthentication era o [0]).
         product = ProductFactory(stock=5)
         client = APIClient()
 
         response = client.post(
-            reverse("order-list"),
-            {"product": product.id, "quantity": 1},
-            format="json",
+        reverse("order-list"),
+        {"product": product.id, "quantity": 1},
+        format="json",
         )
 
-        assert response.status_code == 403
+        assert response.status_code == 401
