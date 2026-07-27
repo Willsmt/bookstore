@@ -11,11 +11,12 @@ from books.serializers import BookSerializer
 class BookViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ["categories"]
     search_fields = ["title", "author"]
     ordering_fields = ["price", "stock", "published_at"]
 
     def get_queryset(self):
-        qs = Book.objects.all()
+        qs = Book.objects.prefetch_related("categories")
         if self.action == "reactivate":
             return qs
         return qs.filter(is_active=True)
