@@ -3,6 +3,8 @@ services:
     image: postgres:18-alpine
     networks:
       - bookstore_network
+    ports:
+      - "127.0.0.1:5433:5432"
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
@@ -22,6 +24,12 @@ services:
     env_file: .env
     environment:
       DEBUG: "False"
+      DB_ENGINE: django.db.backends.postgresql
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: db
+      DB_PORT: "5432"
     ports:
       - "8000:8000"
     depends_on:
