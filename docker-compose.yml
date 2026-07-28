@@ -1,6 +1,8 @@
 services:
   db:
     image: postgres:18-alpine
+    networks:
+      - bookstore_network
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
@@ -15,6 +17,8 @@ services:
 
   web:
     build: .
+    networks:
+      - bookstore_network
     env_file: .env
     environment:
       DEBUG: "False"
@@ -26,3 +30,7 @@ services:
 
 volumes:
   postgres_data:
+
+networks:
+  bookstore_network:
+    driver: bridge
