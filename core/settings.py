@@ -35,10 +35,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_extensions",
+    "django_filters",          # <- adicionar esta linha
     # Third party
     "rest_framework",
     # Local
     "books",
+    "product",
+    "orders",
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
