@@ -1,18 +1,17 @@
 from django.contrib import admin
+from django.conf import settings
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views as authtoken_views
 from books.views import BookViewSet
 from orders.views import OrderViewSet
 from product.views import CategoryViewSet, ProductViewSet
-from django.conf import settings
 
 router = DefaultRouter()
 router.register(r'books', BookViewSet, basename='book')
 router.register(r'categories', CategoryViewSet, basename='category')
 router.register(r'products', ProductViewSet, basename='product')
 router.register(r'orders', OrderViewSet, basename='order')
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -21,7 +20,5 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    import debug_toolbar
-    urlpatterns = [
-        path("__debug__/", include(debug_toolbar.urls)),
-    ] + urlpatterns
+    from debug_toolbar.toolbar import debug_toolbar_urls
+    urlpatterns += debug_toolbar_urls()
