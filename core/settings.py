@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
-
 from decouple import Csv, config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -62,7 +61,6 @@ if DEBUG:
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
-
 ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
