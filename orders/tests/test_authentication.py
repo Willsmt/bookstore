@@ -28,12 +28,12 @@ class TestOrderTokenAuthentication:
         )
 
         assert response.status_code == 201
-
-    def test_sem_token_permite_leitura(self):
+    def test_sem_token_bloqueia_leitura(self):
         client = APIClient()
         response = client.get(reverse("order-list"))
-        assert response.status_code == 200
 
+        assert response.status_code == 401
+        assert response.data["detail"] == "Authentication credentials were not provided."
     def test_sem_token_bloqueia_escrita(self):
         product = ProductFactory(stock=10)
         client = APIClient()
