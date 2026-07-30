@@ -1,5 +1,6 @@
 from django.db import transaction
 from rest_framework import serializers
+
 from orders.models import Order
 from product.models import Product
 
@@ -12,13 +13,17 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def validate_quantity(self, value):
         if value <= 0:
-            raise serializers.ValidationError("A quantidade precisa ser maior que zero.")
+            raise serializers.ValidationError(
+                "A quantidade precisa ser maior que zero."
+            )
         return value
 
     def validate(self, data):
         product = data["product"]
         if not product.is_active:
-            raise serializers.ValidationError("Este produto não está disponível para venda.")
+            raise serializers.ValidationError(
+                "Este produto não está disponível para venda."
+            )
         if data["quantity"] > product.stock:
             raise serializers.ValidationError(
                 f"Estoque insuficiente. Disponível: {product.stock}, pedido: {data['quantity']}."
@@ -32,7 +37,9 @@ class OrderSerializer(serializers.ModelSerializer):
         with transaction.atomic():
             product = Product.objects.select_for_update().get(pk=product.pk)
             if quantity > product.stock:
-                raise serializers.ValidationError("Estoque mudou durante a operação, tenta de novo.")
+                raise serializers.ValidationError(
+                    "Estoque mudou durante a operação, tenta de novo."
+                )
 
             product.stock -= quantity
             product.save(update_fields=["stock"])
