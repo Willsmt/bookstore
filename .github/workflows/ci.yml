@@ -1,4 +1,41 @@
-test:
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Ruff (lint + format)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar Poetry
+        run: pipx install poetry
+
+      - name: Instalar dependências (com grupo dev)
+        run: poetry install --with dev
+
+      - name: Rodar Ruff (lint)
+        run: poetry run ruff check .
+
+      - name: Rodar Ruff (format check)
+        run: poetry run ruff format --check .
+
+  test:
     name: Pytest (Postgres real)
     runs-on: ubuntu-latest
 
