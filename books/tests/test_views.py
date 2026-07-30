@@ -25,7 +25,11 @@ class TestBookAPI:
         active = BookFactory(is_active=True)
         response = APIClient().get(reverse("book-list"))
         payload = response.json()
-        results = payload["results"] if isinstance(payload, dict) and "results" in payload else payload
+        results = (
+            payload["results"]
+            if isinstance(payload, dict) and "results" in payload
+            else payload
+        )
         listed_ids = [b["id"] for b in results]
         assert active.id in listed_ids
         assert len(listed_ids) == 1
@@ -35,7 +39,11 @@ class TestBookAPI:
         BookFactory(title="História do Brasil", stock=5)
         response = APIClient().get(reverse("book-list") + "?search=Python")
         payload = response.json()
-        results = payload["results"] if isinstance(payload, dict) and "results" in payload else payload
+        results = (
+            payload["results"]
+            if isinstance(payload, dict) and "results" in payload
+            else payload
+        )
         assert len(results) == 1
         assert "Python" in results[0]["title"]
 
@@ -44,7 +52,11 @@ class TestBookAPI:
         BookFactory(title="Livro Caro", price="80.00", stock=5)
         response = APIClient().get(reverse("book-list") + "?ordering=-price")
         payload = response.json()
-        results = payload["results"] if isinstance(payload, dict) and "results" in payload else payload
+        results = (
+            payload["results"]
+            if isinstance(payload, dict) and "results" in payload
+            else payload
+        )
         prices = [float(b["price"]) for b in results]
         assert prices == sorted(prices, reverse=True)
 
@@ -55,7 +67,11 @@ class TestBookAPI:
         BookFactory(categories=[outra_categoria])
         response = APIClient().get(reverse("book-list") + f"?categories={category.id}")
         payload = response.json()
-        results = payload["results"] if isinstance(payload, dict) and "results" in payload else payload
+        results = (
+            payload["results"]
+            if isinstance(payload, dict) and "results" in payload
+            else payload
+        )
         assert len(results) == 1
         assert results[0]["id"] == livro_na_categoria.id
 
@@ -71,11 +87,15 @@ class TestBookAPI:
         response = APIClient().post(reverse("book-reactivate", args=[book.id]))
         assert response.status_code == 403
 
-    def test_list_books_usa_prefetch_e_nao_gera_n_mais_1(self, django_assert_num_queries):
+    def test_list_books_usa_prefetch_e_nao_gera_n_mais_1(
+        self, django_assert_num_queries
+    ):
         category = CategoryFactory()
         BookFactory.create_batch(5, categories=[category])
 
-        with django_assert_num_queries(3):  # count (paginação) + select books (JOIN product) + prefetch categories
+        with django_assert_num_queries(
+            3
+        ):  # count (paginação) + select books (JOIN product) + prefetch categories
             response = APIClient().get(reverse("book-list"))
 
         assert response.status_code == 200

@@ -1,7 +1,9 @@
 from rest_framework import serializers
+
 from books.models import Book
-from product.serializers import CategorySerializer
 from product.models import Category
+from product.serializers import CategorySerializer
+
 
 class BookSerializer(serializers.ModelSerializer):
     categories = CategorySerializer(many=True, read_only=True)
@@ -16,6 +18,14 @@ class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = [
-            "id", "title", "author", "isbn", "price", "published_at",
-            "is_active", "stock", "categories", "category_ids",
+            "id",
+            "title",
+            "author",
+            "isbn",
+            "price",
+            "published_at",
+            "is_active",
+            "stock",
+            "categories",
+            "category_ids",
         ]
