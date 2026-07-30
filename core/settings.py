@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
+    "drf_spectacular",
     # Local
     "books",
     "product",
@@ -140,9 +141,16 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 20,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 CORS_ALLOWED_ORIGINS = config(
     "CORS_ALLOWED_ORIGINS",
     default="http://localhost:3000,http://127.0.0.1:3000",
     cast=lambda v: [s.strip() for s in v.split(",")],
 )
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Bookstore API",
+    "DESCRIPTION": "API de catálogo, pedidos e gestão de estoque para lojas de livros/produtos.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
