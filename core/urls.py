@@ -30,7 +30,6 @@ urlpatterns = [
         name="swagger-ui",
     ),
     path("api/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
-    
 ]
 
 if settings.DEBUG:
