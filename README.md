@@ -1,15 +1,21 @@
 # Bookstore API
 
-API REST para gerenciamento de livros, construída com Django REST Framework como projeto prático do módulo de configuração do DRF.
+[![CI](https://github.com/Willsmt/bookstore/actions/workflows/ci.yml/badge.svg)](https://github.com/Willsmt/bookstore/actions/workflows/ci.yml)
+[![CodeFactor](https://www.codefactor.io/repository/github/willsmt/bookstore/badge)](https://www.codefactor.io/repository/github/willsmt/bookstore)
+
+API REST para gerenciamento de catálogo, pedidos e estoque, construída com Django REST Framework. Projeto prático do curso EBAC Full Stack Python.
 
 ## Stack
 
 - Python 3.14
 - Django 6.0
 - Django REST Framework 3.17
+- PostgreSQL
 - Poetry (gerenciamento de dependências)
+- Docker + Docker Compose
 - Ruff (lint + format)
 - pytest + pytest-django + factory-boy (testes)
+- GitHub Actions (CI: lint, testes, build da imagem)
 
 ## Setup
 
