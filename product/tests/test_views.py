@@ -13,7 +13,9 @@ User = get_user_model()
 class TestProductAPI:
     def test_destroy_soft_deletes_product(self, authenticated_client):
         product = ProductFactory(is_active=True)
-        response = authenticated_client.delete(reverse("product-detail", args=[product.id]))
+        response = authenticated_client.delete(
+            reverse("product-detail", args=[product.id])
+        )
         assert response.status_code == 204
         product.refresh_from_db()
         assert product.is_active is False
@@ -24,7 +26,11 @@ class TestProductAPI:
         active = ProductFactory(is_active=True)
         response = APIClient().get(reverse("product-list"))
         payload = response.json()
-        results = payload["results"] if isinstance(payload, dict) and "results" in payload else payload
+        results = (
+            payload["results"]
+            if isinstance(payload, dict) and "results" in payload
+            else payload
+        )
         listed_ids = [p["id"] for p in results]
         assert active.id in listed_ids
         assert len(listed_ids) == 1
@@ -34,7 +40,11 @@ class TestProductAPI:
         ProductFactory(title="Barato", price="10.00", stock=5)
         response = APIClient().get(reverse("product-list") + "?ordering=price")
         payload = response.json()
-        results = payload["results"] if isinstance(payload, dict) and "results" in payload else payload
+        results = (
+            payload["results"]
+            if isinstance(payload, dict) and "results" in payload
+            else payload
+        )
         prices = [float(p["price"]) for p in results]
         assert prices == sorted(prices)
 
@@ -43,7 +53,11 @@ class TestProductAPI:
         ProductFactory(title="Culinária Italiana", stock=5)
         response = APIClient().get(reverse("product-list") + "?search=Django")
         payload = response.json()
-        results = payload["results"] if isinstance(payload, dict) and "results" in payload else payload
+        results = (
+            payload["results"]
+            if isinstance(payload, dict) and "results" in payload
+            else payload
+        )
         assert len(results) == 1
         assert "Django" in results[0]["title"]
 
@@ -52,15 +66,23 @@ class TestProductAPI:
         outra_categoria = CategoryFactory(name="Culinária")
         produto_na_categoria = ProductFactory(categories=[category])
         ProductFactory(categories=[outra_categoria])
-        response = APIClient().get(reverse("product-list") + f"?categories={category.id}")
+        response = APIClient().get(
+            reverse("product-list") + f"?categories={category.id}"
+        )
         payload = response.json()
-        results = payload["results"] if isinstance(payload, dict) and "results" in payload else payload
+        results = (
+            payload["results"]
+            if isinstance(payload, dict) and "results" in payload
+            else payload
+        )
         assert len(results) == 1
         assert results[0]["id"] == produto_na_categoria.id
 
     def test_reactivate_reactivates_inactive_product(self, authenticated_client):
         product = ProductFactory(is_active=False)
-        response = authenticated_client.post(reverse("product-reactivate", args=[product.id]))
+        response = authenticated_client.post(
+            reverse("product-reactivate", args=[product.id])
+        )
         assert response.status_code == 200
         product.refresh_from_db()
         assert product.is_active is True
@@ -79,7 +101,9 @@ class TestProductAPI:
         assert response.status_code == 400
         assert "price" in response.json()
 
-    def test_list_products_usa_prefetch_e_nao_gera_n_mais_1(self, django_assert_num_queries):
+    def test_list_products_usa_prefetch_e_nao_gera_n_mais_1(
+        self, django_assert_num_queries
+    ):
         category = CategoryFactory()
         ProductFactory.create_batch(5, categories=[category])
 

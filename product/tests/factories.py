@@ -1,6 +1,6 @@
-
 import factory
 from django.utils.text import slugify
+
 from product.models import Category, Product
 
 

@@ -3,12 +3,12 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.response import Response
-from core.pagination import ProductPagination , CategoryPagination
+
+from core.pagination import CategoryPagination, ProductPagination
 from product.filters import ProductFilterSet
-
-
 from product.models import Category, Product
 from product.serializers import CategorySerializer, ProductSerializer
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
@@ -33,7 +33,6 @@ class CategoryViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
@@ -47,6 +46,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         if self.action == "reactivate":
             return qs
         return qs.filter(is_active=True)
+
     def perform_destroy(self, instance):
         instance.is_active = False
         instance.save(update_fields=["is_active"])

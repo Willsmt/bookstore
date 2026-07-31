@@ -1,6 +1,8 @@
 from decimal import Decimal
+
 from django.core.management.base import BaseCommand
 from faker import Faker
+
 from product.models import Product
 
 
@@ -17,7 +19,9 @@ class Command(BaseCommand):
         products = [
             Product(
                 title=fake.sentence(nb_words=3).rstrip("."),
-                price=Decimal(fake.pydecimal(left_digits=3, right_digits=2, positive=True)).quantize(Decimal("0.01")),
+                price=Decimal(
+                    fake.pydecimal(left_digits=3, right_digits=2, positive=True)
+                ).quantize(Decimal("0.01")),
                 stock=fake.random_int(min=0, max=200),
             )
             for _ in range(total)

@@ -41,9 +41,9 @@ class TestOrderAPI:
         client = APIClient()
 
         response = client.post(
-        reverse("order-list"),
-        {"product": product.id, "quantity": 1},
-        format="json",
+            reverse("order-list"),
+            {"product": product.id, "quantity": 1},
+            format="json",
         )
 
         assert response.status_code == 401

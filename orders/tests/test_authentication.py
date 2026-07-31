@@ -17,7 +17,6 @@ def order_token(db):
 
 @pytest.mark.django_db
 class TestOrderTokenAuthentication:
-
     def test_token_valido_autoriza_criacao(self, order_token):
         product = ProductFactory(stock=10)
         client = APIClient()
@@ -28,12 +27,16 @@ class TestOrderTokenAuthentication:
         )
 
         assert response.status_code == 201
+
     def test_sem_token_bloqueia_leitura(self):
         client = APIClient()
         response = client.get(reverse("order-list"))
 
         assert response.status_code == 401
-        assert response.data["detail"] == "Authentication credentials were not provided."
+        assert (
+            response.data["detail"] == "Authentication credentials were not provided."
+        )
+
     def test_sem_token_bloqueia_escrita(self):
         product = ProductFactory(stock=10)
         client = APIClient()
@@ -43,7 +46,9 @@ class TestOrderTokenAuthentication:
         )
 
         assert response.status_code == 401
-        assert response.data["detail"] == "Authentication credentials were not provided."
+        assert (
+            response.data["detail"] == "Authentication credentials were not provided."
+        )
 
     def test_token_invalido_rejeita_mesmo_em_leitura(self):
         client = APIClient()

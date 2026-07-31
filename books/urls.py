@@ -6,4 +6,3 @@ router = DefaultRouter()
 router.register("books", BookViewSet)
 
 urlpatterns = router.urls
-

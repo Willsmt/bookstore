@@ -1,4 +1,5 @@
 import pytest
+
 from product.models import Category
 from product.tests.factories import ProductFactory
 

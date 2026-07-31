@@ -1,4 +1,5 @@
 import factory
+
 from orders.models import Order
 from product.tests.factories import ProductFactory
 
