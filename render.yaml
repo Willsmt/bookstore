@@ -9,7 +9,7 @@ services:
       - key: DEBUG
         value: "False"
       - key: ALLOWED_HOSTS
-        value: bookstore-api.onrender.com
+        value: localhost,127.0.0.1,.onrender.com
       - key: SECRET_KEY
         generateValue: true
       - key: DB_ENGINE
